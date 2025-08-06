@@ -1,0 +1,25 @@
+{
+    
+    "java.project.sourcePaths": [
+        "src"
+    ],
+
+    
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ],
+
+    
+    "java.project.outputPath": "out",
+
+    
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+
+    
+    
+}

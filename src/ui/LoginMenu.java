@@ -5,18 +5,19 @@ import models.Admin;
 import models.Member;
 import models.Trainer;
 import models.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Scanner;
 
 /**
- * Handles user login and registration.
+ * Handles user login and registration for the Gym Management System.
  */
 public class LoginMenu {
     private final UserDAO userDAO;
     private final Scanner scanner;
 
     /**
-     * Constructs a LoginMenu with a UserDAO.
+     * Constructs a LoginMenu instance.
      */
     public LoginMenu() {
         this.userDAO = new UserDAO();
@@ -24,7 +25,7 @@ public class LoginMenu {
     }
 
     /**
-     * Starts the login menu loop.
+     * Starts the login/registration menu loop.
      */
     public void start() {
         while (true) {
@@ -34,7 +35,7 @@ public class LoginMenu {
             System.out.println("3. Exit");
             System.out.print("Select an option: ");
 
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -53,60 +54,72 @@ public class LoginMenu {
     }
 
     /**
-     * Handles the login process.
+     * Handles user login.
      */
     private void login() {
         System.out.print("Enter username: ");
-        String username = scanner.nextLine();
+        String username = scanner.nextLine().trim();
 
         System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        String password = scanner.nextLine().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            System.out.println("Username and password cannot be empty.");
+            return;
+        }
 
         User user = userDAO.getUserByUsername(username);
 
-        if (user != null && user.getPasswordHash().equals(password)) { // TODO: Replace with BCrypt check later
+        if (user != null && BCrypt.checkpw(password, user.getPasswordHash())) {
             System.out.println("Login successful! Welcome, " + user.getUsername() + ".");
-            user.displayMenu();
+            user.displayMenu(); // Later: Call role-specific menu here
         } else {
             System.out.println("Invalid username or password.");
         }
     }
 
     /**
-     * Handles the registration process.
+     * Handles user registration.
      */
     private void register() {
         System.out.print("Enter username: ");
-        String username = scanner.nextLine();
+        String username = scanner.nextLine().trim();
 
         System.out.print("Enter password: ");
-        String password = scanner.nextLine(); // TODO: Hash with BCrypt later
+        String rawPassword = scanner.nextLine().trim();
 
         System.out.print("Enter email: ");
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().trim();
 
         System.out.print("Enter phone number: ");
-        String phone = scanner.nextLine();
+        String phone = scanner.nextLine().trim();
 
         System.out.print("Enter address: ");
-        String address = scanner.nextLine();
+        String address = scanner.nextLine().trim();
 
         System.out.print("Enter role (Admin/Trainer/Member): ");
-        String role = scanner.nextLine();
+        String role = scanner.nextLine().trim();
+
+        if (username.isEmpty() || rawPassword.isEmpty() || email.isEmpty() || role.isEmpty()) {
+            System.out.println("Username, password, email, and role cannot be empty.");
+            return;
+        }
+
+        String passwordHash = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
 
         User newUser;
         switch (role.toLowerCase()) {
             case "admin":
-                newUser = new Admin(0, username, password, email, phone, address);
+                newUser = new Admin(0, username, passwordHash, email, phone, address);
                 break;
             case "trainer":
-                newUser = new Trainer(0, username, password, email, phone, address);
+                newUser = new Trainer(0, username, passwordHash, email, phone, address);
                 break;
             case "member":
-                newUser = new Member(0, username, password, email, phone, address);
+                newUser = new Member(0, username, passwordHash, email, phone, address);
                 break;
             default:
-                System.out.println("Invalid role.");
+                System.out.println("Invalid role. Please choose Admin, Trainer, or Member.");
                 return;
         }
 
@@ -114,7 +127,7 @@ public class LoginMenu {
         if (success) {
             System.out.println("User registered successfully!");
         } else {
-            System.out.println("Registration failed. Username might already exist.");
+            System.out.println("Registration failed. Username may already exist.");
         }
     }
 }

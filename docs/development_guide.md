@@ -13,3 +13,7 @@ This folder contains the schema that will populate my database.
 
 ### docs
 This folder contains all of my documentation, it currently contains the development guide and the user guide but will contain my graphs and diagrams in the future.
+
+
+## Build process
+---

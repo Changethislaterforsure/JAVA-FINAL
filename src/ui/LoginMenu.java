@@ -70,6 +70,16 @@ public class LoginMenu {
 
         User user = userDAO.getUserByUsername(username);
 
+        if (user instanceof Admin) {
+            new AdminMenu((Admin) user).start();
+        } else if (user instanceof Trainer) {
+            new TrainerMenu((Trainer) user).start();
+        } else if (user instanceof Member) {
+            new MemberMenu((Member) user).start();
+        } else {
+            System.out.println("Unknown user role. Access denied.");
+        }
+
         if (user != null && BCrypt.checkpw(password, user.getPasswordHash())) {
             System.out.println("Login successful! Welcome, " + user.getUsername() + ".");
             user.displayMenu(); // Later: Call role-specific menu here

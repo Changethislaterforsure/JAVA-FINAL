@@ -124,4 +124,46 @@ public class WorkoutClassDAO {
 
         return classes;
     }
+
+    public List<WorkoutClass> getWorkoutClassesByTrainer(int trainerId) {
+        List<WorkoutClass> classes = new ArrayList<>();
+        String sql = "SELECT * FROM workout_classes WHERE trainer_id = ?";
+    
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    
+            stmt.setInt(1, trainerId);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                WorkoutClass wc = new WorkoutClass(
+                    rs.getInt("class_id"),
+                    rs.getString("class_type"),
+                    rs.getString("description"),
+                    rs.getDate("class_date").toLocalDate(),
+                    rs.getTime("class_time").toLocalTime(),
+                    rs.getInt("trainer_id")
+                );
+                classes.add(wc);
+            }
+    
+        } catch (SQLException e) {
+            System.err.println("Error retrieving classes: " + e.getMessage());
+        }
+    
+        return classes;
+    }
+
+    public boolean deleteWorkoutClass(int classId) {
+        String sql = "DELETE FROM workout_classes WHERE class_id = ?";
+    
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, classId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error deleting workout class: " + e.getMessage());
+            return false;
+        }
+    }
 }

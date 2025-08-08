@@ -1,15 +1,13 @@
 package dao;
 
-import models.User;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import models.Admin;
-import models.Trainer;
 import models.Member;
+import models.Trainer;
+import models.User;
 import util.DBConnection;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Data Access Object for managing User-related database operations.
@@ -66,20 +64,78 @@ public class UserDAO {
                 String phone = rs.getString("phone_number");
                 String address = rs.getString("address");
 
-                switch (role.toLowerCase()) {
-                    case "admin":
-                        return new Admin(userId, username, passwordHash, email, phone, address);
-                    case "trainer":
-                        return new Trainer(userId, username, passwordHash, email, phone, address);
-                    case "member":
-                        return new Member(userId, username, passwordHash, email, phone, address);
-                    default:
-                        return null;
-                }
+                return switch (role.toLowerCase()) {
+                    case "admin" -> new Admin(userId, username, passwordHash, email, phone, address);
+                    case "trainer" -> new Trainer(userId, username, passwordHash, email, phone, address);
+                    case "member" -> new Member(userId, username, passwordHash, email, phone, address);
+                    default -> null;
+                };
             }
         } catch (SQLException e) {
             System.err.println("Error retrieving user: " + e.getMessage());
         }
         return null;
+    }
+
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return A list of all User objects.
+     */
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String role = rs.getString("role");
+                int userId = rs.getInt("user_id");
+                String username = rs.getString("username");
+                String passwordHash = rs.getString("password_hash");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone_number");
+                String address = rs.getString("address");
+
+                User user = switch (role.toLowerCase()) {
+                    case "admin" -> new Admin(userId, username, passwordHash, email, phone, address);
+                    case "trainer" -> new Trainer(userId, username, passwordHash, email, phone, address);
+                    case "member" -> new Member(userId, username, passwordHash, email, phone, address);
+                    default -> null;
+                };
+
+                if (user != null) {
+                    users.add(user);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error retrieving users: " + e.getMessage());
+        }
+
+        return users;
+    }
+
+    /**
+     * Deletes a user from the database by their username.
+     *
+     * @param username The username of the user to delete.
+     * @return true if the user was deleted, false otherwise.
+     */
+    public boolean deleteUserByUsername(String username) {
+        String sql = "DELETE FROM users WHERE username = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error deleting user: " + e.getMessage());
+            return false;
+        }
     }
 }

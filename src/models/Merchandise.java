@@ -3,71 +3,66 @@ package models;
 import java.math.BigDecimal;
 
 /**
- * Represents an item of gym merchandise.
+ * Represents a merchandise item sold at the gym.
  */
 public class Merchandise {
-    private int merchId;
-    private String merchName;
-    private String merchType;
-    private BigDecimal merchPrice;
-    private int quantityInStock;
+    private int itemId;
+    private String itemName;
+    private String description;
+    private BigDecimal price;
 
-    public Merchandise(int merchId, String merchName, String merchType, BigDecimal merchPrice, int quantityInStock) {
-        this.merchId = merchId;
-        this.merchName = merchName;
-        this.merchType = merchType;
-        this.merchPrice = merchPrice;
-        this.quantityInStock = quantityInStock;
+    /**
+     * Constructs a Merchandise object with all fields.
+     *
+     * @param itemId      The ID of the merchandise item.
+     * @param itemName    The name of the item.
+     * @param description A brief description of the item.
+     * @param price       The item's price.
+     */
+    public Merchandise(int itemId, String itemName, String description, BigDecimal price) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.description = description;
+        this.price = price;
     }
 
-    public int getMerchId() {
-        return merchId;
+    // --- Getters ---
+
+    public int getItemId() {
+        return itemId;
     }
 
-    public String getMerchName() {
-        return merchName;
+    public String getItemName() {
+        return itemName;
     }
 
-    public String getMerchType() {
-        return merchType;
+    public String getDescription() {
+        return description;
     }
 
-    public BigDecimal getMerchPrice() {
-        return merchPrice;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public int getQuantityInStock() {
-        return quantityInStock;
+    // --- Setters ---
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
-    public void setMerchId(int merchId) {
-        this.merchId = merchId;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setMerchName(String merchName) {
-        this.merchName = merchName;
-    }
-
-    public void setMerchType(String merchType) {
-        this.merchType = merchType;
-    }
-
-    public void setMerchPrice(BigDecimal merchPrice) {
-        this.merchPrice = merchPrice;
-    }
-
-    public void setQuantityInStock(int quantityInStock) {
-        this.quantityInStock = quantityInStock;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override
     public String toString() {
-        return "Merchandise{" +
-                "ID=" + merchId +
-                ", Name='" + merchName + '\'' +
-                ", Type='" + merchType + '\'' +
-                ", Price=" + merchPrice +
-                ", Quantity=" + quantityInStock +
-                '}';
+        return "Item ID: " + itemId +
+               ", Name: " + itemName +
+               ", Description: " + description +
+               ", Price: $" + price;
     }
 }

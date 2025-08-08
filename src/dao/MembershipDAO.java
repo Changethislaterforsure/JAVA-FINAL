@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,4 +120,25 @@ public class MembershipDAO {
 
         return memberships;
     }
+
+    /**
+ * Calculates the total revenue from all memberships.
+ *
+ * @return Total revenue as BigDecimal, or null if error occurs.
+ */
+public BigDecimal getTotalRevenue() {
+    String sql = "SELECT SUM(cost) AS total FROM memberships";
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        if (rs.next()) {
+            return rs.getBigDecimal("total");
+        }
+    } catch (SQLException e) {
+        System.err.println("Error calculating total membership revenue: " + e.getMessage());
+    }
+    return null;
+}
 }

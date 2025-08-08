@@ -10,6 +10,7 @@ public class Merchandise {
     private String itemName;
     private String description;
     private BigDecimal price;
+    private int quantity;
 
     /**
      * Constructs a Merchandise object with all fields.
@@ -19,11 +20,12 @@ public class Merchandise {
      * @param description A brief description of the item.
      * @param price       The item's price.
      */
-    public Merchandise(int itemId, String itemName, String description, BigDecimal price) {
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.description = description;
+    public Merchandise(int id, String name, String type, BigDecimal price, int quantity) {
+        this.itemId = id;
+        this.itemName = name;
+        this.description = type;
         this.price = price;
+        this.quantity = quantity;
     }
 
     // --- Getters ---
@@ -42,6 +44,10 @@ public class Merchandise {
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     // --- Setters ---

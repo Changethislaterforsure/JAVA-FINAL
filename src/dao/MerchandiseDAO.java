@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,8 @@ public class MerchandiseDAO {
                     rs.getInt("item_id"),
                     rs.getString("item_name"),
                     rs.getString("description"),
-                    rs.getBigDecimal("price")
+                    rs.getBigDecimal("price"),
+                    rs.getInt("quantity")
                 );
                 items.add(item);
             }
@@ -85,4 +87,25 @@ public class MerchandiseDAO {
             return false;
         }
     }
+
+    /**
+ * Calculates the total value of all merchandise (price × quantity).
+ *
+ * @return Total merchandise value as BigDecimal, or null if error occurs.
+ */
+public BigDecimal getTotalMerchValue() {
+    String sql = "SELECT SUM(price * quantity) AS total FROM merchandise";
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        if (rs.next()) {
+            return rs.getBigDecimal("total");
+        }
+    } catch (SQLException e) {
+        System.err.println("Error calculating total merchandise value: " + e.getMessage());
+    }
+    return null;
+}
 }

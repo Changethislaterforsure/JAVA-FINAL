@@ -1,0 +1,10 @@
+Aug 10, 2025 1:31:47 P.M. ui.LoginMenu login
+INFO: User 'BennyBoy' logged in successfully.
+Aug 10, 2025 1:31:59 P.M. ui.TrainerMenu viewMyClasses
+INFO: Trainer 'BennyBoy' viewed their classes. Count=0
+Aug 10, 2025 1:32:30 P.M. ui.TrainerMenu addWorkoutClass
+WARNING: Trainer 'BennyBoy' failed to create class 'Zoomba' on 2025-11-28 at 12:34.
+Aug 10, 2025 2:00:19 P.M. ui.TrainerMenu start
+INFO: Trainer 'BennyBoy' logged out of TrainerMenu.
+Aug 10, 2025 2:00:58 P.M. ui.LoginMenu login
+INFO: User 'Ben' logged in successfully.

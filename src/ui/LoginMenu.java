@@ -8,6 +8,8 @@ import models.User;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Scanner;
+import util.LoggerUtil;
+import java.util.logging.Logger;
 
 /**
  * Handles user login and registration for the Gym Management System.
@@ -15,6 +17,7 @@ import java.util.Scanner;
 public class LoginMenu {
     private final UserDAO userDAO;
     private final Scanner scanner;
+    private static final Logger logger = LoggerUtil.getLogger();
 
     /**
      * Constructs a LoginMenu instance.
@@ -70,20 +73,24 @@ public class LoginMenu {
 
         User user = userDAO.getUserByUsername(username);
 
-        if (user instanceof Admin) {
-            new AdminMenu((Admin) user).start();
-        } else if (user instanceof Trainer) {
-            new TrainerMenu((Trainer) user).start();
-        } else if (user instanceof Member) {
-            new MemberMenu((Member) user).start();
-        } else {
-            System.out.println("Unknown user role. Access denied.");
-        }
-
         if (user != null && BCrypt.checkpw(password, user.getPasswordHash())) {
+            // Successful login
+            logger.info("User '" + username + "' logged in successfully.");
             System.out.println("Login successful! Welcome, " + user.getUsername() + ".");
-            user.displayMenu(); // Later: Call role-specific menu here
+        
+            // Redirect based on role
+            if (user instanceof Admin) {
+                new AdminMenu((Admin) user).start();
+            } else if (user instanceof Trainer) {
+                new TrainerMenu((Trainer) user).start();
+            } else if (user instanceof Member) {
+                new MemberMenu((Member) user).start();
+            } else {
+                System.out.println("Unknown user role. Access denied.");
+            }
         } else {
+            // Failed login
+            logger.warning("Failed login attempt for username: " + username);
             System.out.println("Invalid username or password.");
         }
     }

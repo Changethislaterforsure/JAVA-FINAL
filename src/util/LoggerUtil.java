@@ -9,7 +9,7 @@ public class LoggerUtil {
     static {
         try {
             LogManager.getLogManager().reset();
-            FileHandler fh = new FileHandler("resources/logger.txt", true); // ✅ now writes to the correct file
+            FileHandler fh = new FileHandler("resources/logger.txt", true); 
             fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
             logger.setLevel(Level.INFO);

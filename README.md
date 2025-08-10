@@ -29,23 +29,3 @@ java -cp "out:lib/*" ui.Main
 
 If the database has been set up correctly along with the correct drivers (as the .gitignore will omit them) you will see a success message and then the main menu will open allowing you to register and login once registered. The menu layout is fairly simple and straight forward and so should not take much getting use to at all. 
 
-## Flow
----
-+------------------+          +----------------------+          +------------------+          +-------------------------+
-|   MemberMenu     |          |   MembershipService  |          |   MembershipDAO  |          |  PostgreSQL (gymdb)     |
-|  (UI / console)  |          | (business rules)     |          | (SQL operations) |          |  tables: memberships... |
-+---------+--------+          +----------+-----------+          +---------+--------+          +------------+------------+
-          |                              |                                 |                               |
-          | choose "Purchase"            |                                 |                               |
-          | enter type/desc/cost         |                                 |                               |
-          |----------------------------->|                                 |                               |
-          |                              | create Membership model         |                               |
-          |                              |-------------------------------> |                               |
-          |                              |                                 | INSERT INTO memberships (...) |
-          |                              |                                 |------------------------------>|
-          |                              |                                 |                               |
-          |   success / failure          |  boolean result                 |   update rowcount             |
-          |<-----------------------------|<------------------------------- |<------------------------------|
-          | print message                |                                 |                               |
-          v                              v                                 v                               v
-   (logger writes to resources/logger.txt at key steps: start purchase, success/fail)
